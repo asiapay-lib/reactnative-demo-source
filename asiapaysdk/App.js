@@ -1,11 +1,21 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import Toast from 'react-native-toast-message';
 import Asiapay from 'asiapay';
 
 export default function App() {
   React.useEffect(() => {
     Asiapay.setup('SANDBOX', '88149885');
   }, []);
+
+  const showToast = (type, text1, text2) => {
+    Toast.show({
+      type,
+      text1,
+      text2
+    });
+  };
+
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -13,9 +23,10 @@ export default function App() {
           Asiapay.alipayHK('88146271', '1', 'HKD', Date.now().toString(), 'Test')
           .then(s => {
             console.log(s);
+            showToast('success', 'Success', 'Transaction completed successfully.');
           })
           .catch(({code, message}) => {
-            console.log(code, " " + message)
+            showToast('error', `Error ${code}`, message);
           });      
         }}
         style={styles.button}>
@@ -27,9 +38,10 @@ export default function App() {
           Asiapay.hostedcall('88146271', '1', 'HKD', Date.now().toString(), 'Test')  
           .then(s => {
             console.log(s);
+            showToast('success', 'Success', 'Transaction completed successfully.');
           })
           .catch(({code, message}) => {
-            console.log(code, " " + message)
+            showToast('error', `Error ${code}`, message);
           });      
         }}
         style={styles.button}>
@@ -41,16 +53,16 @@ export default function App() {
           Asiapay.octopus('88146271', '1', 'HKD', Date.now().toString())  
           .then(s => {
             console.log(s);
+            showToast('success', 'Success', 'Transaction completed successfully.');
           })
           .catch(({code, message}) => {
-            console.log(code, " " + message)
+            showToast('error', `Error ${code}`, message);
           });      
         }}
         style={styles.button}>
-        <Text style={styles.buttonTxt}>
-        Octopus
-        </Text>            
+        <Text style={styles.buttonTxt}>Octopus</Text>
       </TouchableOpacity>
+      <Toast ref={(ref) => Toast.setRef(ref)} />
     </View>
   );
 }
